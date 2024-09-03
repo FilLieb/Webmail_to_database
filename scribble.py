@@ -16,27 +16,28 @@ def substring_after(text, after):
     return text.partition(after)[2]
 
 # create variables with info
-name = find_between(Body, "Name ", "Date")
-date = find_between(Body, "Date ", "Column")
-column = find_between(Body, "used ", "runs")
-runs = find_between(Body, "runs ", "End")
-pressure = find_between(Body, "pressure ", "Flow")
-flow = find_between(Body, "rate ", "Column")
-clean = find_between(Body, "? ", "solution")
-solution = find_between(Body, "equilibrated ", "Errors/Comments")
-comments = substring_after(Body, "Errors/Comments ")
+def fetch_data(text):
+    name = find_between(text, "Name ", "Date")
+    date = find_between(text, "Date ", "Column")
+    column = find_between(text, "used ", "runs")
+    runs = find_between(text, "runs ", "End")
+    pressure = find_between(text, "pressure ", "Flow")
+    flow = find_between(text, "rate ", "Column")
+    clean = find_between(text, "? ", "solution")
+    solution = find_between(text, "equilibrated ", "Errors/Comments")
+    comments = substring_after(text, "Errors/Comments ")
+    new_data = [[name, date, column, runs, pressure, flow, clean, solution, comments]]
+    return new_data
 
-# add variable to data frame
-new_data = [[name, date, column, runs, pressure, flow, clean, solution, comments]]
+def append_sheet(email):
+    new = fetch_data(email)
+    # Open existing workbook and select the active worksheet
+    workbook = openpyxl.load_workbook('ColumnLogbook_QR.xlsx')
+    sheet = workbook.active
+    # Append new data
+    for row in new:
+        sheet.append(row)
+    # Save the workbook
+    workbook.save('ColumnLogbook_QR.xlsx')
 
-
-# Open existing workbook and select the active worksheet
-workbook = openpyxl.load_workbook('ColumnLogbook_QR.xlsx')
-sheet = workbook.active
-
-# Append new data
-for row in new_data:
-    sheet.append(row)
-
-# Save the workbook
-workbook.save('ColumnLogbook_QR.xlsx')
+append_sheet(Body)
