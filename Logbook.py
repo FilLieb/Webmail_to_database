@@ -20,12 +20,12 @@ def substring_after(text, after):
 def fetch_data(text):
     name = find_between(text, "Name ", "Date")
     date = find_between(text, "Date ", "Column")
-    column = find_between(text, "used ", "runs")
-    runs = find_between(text, "runs ", "End")
-    pressure = find_between(text, "pressure ", "Flow")
+    column = find_between(text, "used ", "#")
+    runs = find_between(text, "runs ", "Buffer")
+    pressure = find_between(text, "pressure ", "Buffer")
     flow = find_between(text, "rate ", "Column")
-    clean = find_between(text, "? ", "solution")
-    solution = find_between(text, "equilibrated ", "Errors/Comments")
+    clean = find_between(text, "(NaOH)? ", "Solution")
+    solution = find_between(text, "equilibrated in? ", "Errors/Comments")
     comments = substring_after(text, "Errors/Comments ")
     new_data = [[name, date, column, runs, pressure, flow, clean, solution, comments]]
     return new_data
